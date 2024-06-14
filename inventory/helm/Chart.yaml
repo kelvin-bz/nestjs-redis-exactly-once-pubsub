@@ -1,0 +1,5 @@
+apiVersion: v2
+name: inventory
+description: A Helm chart for inventory
+version: 0.1.0
+appVersion: "1.0"

@@ -1,0 +1,32 @@
+# curl -X POST -H "Content-Type: application/json" -d '{
+#  "orderId": "12345",
+#  "items": [
+#    {
+#      "productId": "001",
+#      "quantity": 2
+#    },
+#    {
+#      "productId": "002",
+#      "quantity": 1
+#    }
+#  ]
+#}' http://localhost:3001/orders
+POST http://localhost:3001/orders
+Content-Type: application/json
+
+{
+  "orderId": "31",
+  "items": [
+    {
+      "id": "001",
+      "quantity": 2
+    },
+    {
+      "id": "002",
+      "quantity": 1
+    }
+  ]
+}
+
+###
+
