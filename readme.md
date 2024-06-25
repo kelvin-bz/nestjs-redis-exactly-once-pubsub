@@ -12,6 +12,45 @@ I3[inventory service 3] -- Subcribe --> R
 
 ```
 This project demonstrates a solution for exactly-once message processing using Redis Pub/Sub with distributed locks in a NestJS application. The goal is to ensure that multiple instances of the service receive the same message, but only one instance processes it.
+```mermaid
+flowchart TD
+    subgraph RedisQueue
+        Client["Client Sends Message"] -->|Message| Redis["Redis"]
+        style Client fill:#f9f,stroke:#333,stroke-width:2px;
+        style Redis fill:#9ff,stroke:#333,stroke-width:2px;
+    end
+
+    subgraph Services
+        Service1["Service Instance 1"]
+        Service2["Service Instance 2"]
+        Service3["Service Instance 3"]
+        style Service1 fill:#ccf,stroke:#333,stroke-width:2px;
+        style Service2 fill:#cfc,stroke:#333,stroke-width:2px;
+        style Service3 fill:#fcf,stroke:#333,stroke-width:2px;
+    end
+
+    Redis --> |Message Sent| Service1
+    Redis --> |Message Sent| Service2
+    Redis --> |Message Sent| Service3
+
+    Service1 --> |Acquire Lock| Lock1["Lock Acquired?"]
+    Service2 --> |Acquire Lock| Lock2["Lock Acquired?"]
+    Service3 --> |Acquire Lock| Lock3["Lock Acquired?"]
+
+    Lock1 -- No --> Skip1["Skip Message"]
+    Lock2 -- Yes --> Process2["Process Message & Update Inventory"]
+    Lock3 -- No --> Skip3["Skip Message"]
+
+    Process2 --> Release2["Release Lock"]
+    style Lock1 fill:#ffc,stroke:#333,stroke-width:2px;
+    style Lock2 fill:#cfc,stroke:#333,stroke-width:2px;
+    style Lock3 fill:#ffc,stroke:#333,stroke-width:2px;
+    style Skip1 fill:#f99,stroke:#333,stroke-width:2px;
+    style Process2 fill:#9f9,stroke:#333,stroke-width:2px;
+    style Skip3 fill:#f99,stroke:#333,stroke-width:2px;
+    style Release2 fill:#ccf,stroke:#333,stroke-width:2px;
+
+```
 
 ```mermaid
 sequenceDiagram
@@ -35,6 +74,7 @@ sequenceDiagram
     end
 
 ```
+
 
 ## Order Service: Publishing Messages to Redis
 
